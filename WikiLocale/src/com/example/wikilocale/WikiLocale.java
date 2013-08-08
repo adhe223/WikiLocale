@@ -9,24 +9,30 @@ import android.view.View.OnClickListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class WikiLocale extends Activity implements OnClickListener {
-
+	private LocationServices loc;
+	private TextView output;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wiki_locale);
+		output = (TextView) findViewById(R.id.output);
+		
+		loc = new LocationServices(this, output);
 		
 		//Click Listeners for buttons
 		View open_current_button = findViewById(R.id.open_current_button);
 		open_current_button.setOnClickListener(this);
-		View test_button = findViewById(R.id.test_button);
+		View test_button = findViewById(R.id.set_home);
 		test_button.setOnClickListener(this);
 		View settings_button = findViewById(R.id.settings_button);
 		settings_button.setOnClickListener(this);
 		View exit_button = findViewById(R.id.exit_button);
 		exit_button.setOnClickListener(this);
-		
 	}
 
 	@Override
@@ -51,7 +57,9 @@ public class WikiLocale extends Activity implements OnClickListener {
 		case R.id.exit_button:
 			finish();
 			break;
+		case R.id.set_home:
+			loc.setHome();
+			break;
 		}
 	}
-
 }

@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:text="@string/open_current" />
     <Button
-        android:id="@+id/test_button"
+        android:id="@+id/set_home"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test_travel" />
+        android:text="@string/setHome" />
     <Button
         android:id="@+id/settings_button"
         android:layout_width="fill_parent"
@@ -38,5 +38,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/exit" />
-
+    <ScrollView
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+	    <TextView
+	        android:id="@+id/output"
+	        android:textColor="#ffffff"
+	        android:textSize="12sp"
+	        android:layout_marginTop="2sp"
+	        android:layout_marginBottom="2sp"
+	        android:layout_gravity="top"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" />       
+	</ScrollView>
 </LinearLayout>
