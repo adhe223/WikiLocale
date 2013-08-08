@@ -9,6 +9,7 @@
     <string name="settings">Settings</string>
     <string name="exit">Exit</string>
     <string name="loc_title">Use GPS</string>
-    <string name="loc_summary">GPS is a more fine location method but uses more battery life</string>
-
+    <string name="loc_summary">GPS is a finer location method but uses more battery life</string>
+	<string name="settings_shortcut">s</string>
+	
 </resources>
