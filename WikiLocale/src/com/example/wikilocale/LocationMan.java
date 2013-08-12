@@ -1,20 +1,27 @@
 package com.example.wikilocale;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.content.Context;
-import android.widget.TextView;
 import android.support.v4.app.NotificationCompat;
+import android.location.Geocoder;
 
 public class LocationMan implements LocationListener {
 	Context myContext;
@@ -27,7 +34,9 @@ public class LocationMan implements LocationListener {
 	public static final long tolerance = 50000; //In meters
 	static final int uniqueID = 9290;
 	private NotificationManager nm;
-	
+	private String url;
+	private List<Address> results;
+	String body;
 	
 	//Takes in Context, TextView for output, anda NotificationManager
 	public LocationMan(Context myContext, TextView textView) {
@@ -52,15 +61,21 @@ public class LocationMan implements LocationListener {
 		
 		
 		//Request for app to update constantly on the given delay between calls
-		mgr.requestLocationUpdates(best, 15000, 100, this);
+		mgr.requestLocationUpdates(best, 21600000, 100, this);
 	}
 	
 
-	//Get the location. Will update location before returning the data
+	//Run notify on the current location. This hooks into the "Get Current Locale" button
+	//on the homescreen of the app.
 	public void getLocation() {
-		oldLocation = currentLocation;
-		currentLocation = mgr.getLastKnownLocation(best);
-		log("\nCurrent location is: " + currentLocation.toString());
+		Location now = mgr.getLastKnownLocation(best);
+		if (now != null) {
+			notify(now);
+		}
+		else {
+			Toast.makeText(myContext, "The current location can't be found!"
+					, Toast.LENGTH_SHORT).show();			
+		}
 	}
 	
 	//Function to set the home location of the user
@@ -136,11 +151,39 @@ public class LocationMan implements LocationListener {
 	//Helper function to send notification to user
 	private void notify(Location location) {
 		nm = (NotificationManager) myContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent intent = new Intent(myContext, LaunchWiki.class);
+		
+		//Must find the customized url of the city using reverse geocoding
+		Geocoder geo = new Geocoder(myContext, Locale.getDefault());
+		try {
+			results = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+		} catch(IOException e) {
+			Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();			
+		}
+		if (results != null) {
+			if (results.size() > 0) {
+				//Correct format of a wiki search
+				//	http://en.wikipedia.org/wiki/Austin,_Texas
+				//More general (leads to a TOC of pages)
+				//	http://en.wikipedia.org/wiki/Austin
+				String locale = results.get(0).getLocality();
+				url = "http://en.wikipedia.org/wiki/" + locale;
+				body = "Check out your location!";
+			} else {
+				url = "http://www.wikipedia.org/";
+				body = "You're location could not be identified!";
+			}
+		} else {
+			url = "http://www.wikipedia.org/";
+			body = "You're location can't be found!";
+		}
+		
+		//Then navigate directly to that url
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse(url));
 		PendingIntent pi = PendingIntent.getActivity(myContext, 0, intent, 0);
-		String body = "You're in a new place!";
 		String title = "WikiLocale";
 		
+		//Build the notification
 		NotificationCompat.Builder n = new NotificationCompat.Builder(myContext);
 		n.setContentIntent(pi);
 		n.setSmallIcon(R.drawable.notif_icon);
@@ -149,11 +192,12 @@ public class LocationMan implements LocationListener {
 		n.setDefaults(Notification.DEFAULT_ALL);
 		Notification notif = n.build();
 		
+		//Finally, send it!
 		nm.notify(uniqueID, notif);
 	}
 	
 	//Helper Function that writes the output text. Will clear it before each new write.
 	private void log(String string) {
-		//output.append(string + "\n");
+		output.append(string + "\n");
 	}
 }
