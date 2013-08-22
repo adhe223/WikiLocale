@@ -22,14 +22,14 @@ public class WikiLocale extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_wiki_locale);
 		output = (TextView) findViewById(R.id.output);
 		
-		////Old Reference
-		////Start the LocationServices service
-		////Intent intent = new Intent(this, LocationServices.class);
-		////this.startService(intent);
+		//Start the LocationServices service
+		Intent intent = new Intent(this, LocService.class);
+		this.startService(intent);
 		
-		//Start the LocationMan custom location listener we will use for location
-		//based services
-		locMan = new LocationMan(this, output);
+//Old way to do it. Have encapsulated this in a service so the lifecycle can be controlled
+//		//Start the LocationMan custom location listener we will use for location
+//		//based services
+//		locMan = new LocationMan(this);
 		
 		//Click Listeners for buttons
 		View open_current_button = findViewById(R.id.open_current_button);
@@ -65,10 +65,10 @@ public class WikiLocale extends Activity implements OnClickListener {
 			finish();
 			break;
 		case R.id.set_home:
-			locMan.setHome();
+			//locMan.setHome();
 			break;
 		case R.id.open_current_button:
-			locMan.getLocation();
+			//locMan.getLocation();
 		}
 	}
 }

@@ -31,17 +31,17 @@ public class LocationMan implements LocationListener {
 	private Location currentLocation;
 	private Location home;
 	private TextView output;
-	public static final long tolerance = 50000; //In meters
+	public static final long tolerance = 10; //In meters
 	static final int uniqueID = 9290;
 	private NotificationManager nm;
 	private String url;
 	private List<Address> results;
 	String body;
 	
-	//Takes in Context, TextView for output, anda NotificationManager
-	public LocationMan(Context myContext, TextView textView) {
+	//Takes in Context, TextView for output, and a NotificationManager
+	public LocationMan(Context myContext) {
 		this.myContext = myContext;	
-		output = textView;
+		//output = textView;
 		
 		mgr = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
 		
@@ -58,10 +58,9 @@ public class LocationMan implements LocationListener {
 			currentLocation = mgr.getLastKnownLocation(best);
 			setHome();
 		}
-		
-		
+
 		//Request for app to update constantly on the given delay between calls
-		mgr.requestLocationUpdates(best, 21600000, 100, this);
+		mgr.requestLocationUpdates(best, 3600000, 100, this);
 	}
 	
 
@@ -73,8 +72,7 @@ public class LocationMan implements LocationListener {
 			notify(now);
 		}
 		else {
-			Toast.makeText(myContext, "The current location can't be found!"
-					, Toast.LENGTH_SHORT).show();			
+			Toast.makeText(myContext, "The current location can't be found!", Toast.LENGTH_SHORT).show();			
 		}
 	}
 	
@@ -198,6 +196,7 @@ public class LocationMan implements LocationListener {
 	
 	//Helper Function that writes the output text. Will clear it before each new write.
 	private void log(String string) {
-		output.append(string + "\n");
+		//output.append(string + "\n");
+		Toast.makeText(myContext, string, Toast.LENGTH_SHORT).show();
 	}
 }
