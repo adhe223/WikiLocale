@@ -22,22 +22,26 @@
         android:id="@+id/open_current_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/open_current" />
+        android:text="@string/open_current"
+    	android:textColor="#000000" />
     <Button
         android:id="@+id/set_home"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/setHome" />
+        android:text="@string/setHome" 
+        android:textColor="#000000" />
     <Button
         android:id="@+id/settings_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings" />
+        android:text="@string/settings" 
+        android:textColor="#000000" />
     <Button
         android:id="@+id/exit_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exit" />
+        android:text="@string/exit" 
+        android:textColor="#000000" />
     <ScrollView
 		android:orientation="vertical"
 		android:layout_width="fill_parent"

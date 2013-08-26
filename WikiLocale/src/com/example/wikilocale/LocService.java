@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.IBinder;
+import android.os.Binder;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,11 +14,18 @@ import android.widget.Toast;
 
 public class LocService extends Service {
 	private Context myContext;
-	private LocationMan lm;
+	public LocationMan lm;
+	IBinder mBinder = new LocalBinder();
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-	    return null;
+	    return mBinder;
+	}
+	
+	public class LocalBinder extends Binder {
+		public LocService getServerInstance() {
+			return LocService.this;
+		}
 	}
 	 
 	@Override
@@ -26,14 +34,8 @@ public class LocService extends Service {
 		 
 		myContext = this;
 		lm = new LocationMan(myContext);
-	 }
-	
-	@Override
-	public void onStart(Intent intent, int startId) {
-		super.onStart(intent, startId);
-		
 		Toast.makeText(myContext, "WikiLocale Service Started", Toast.LENGTH_SHORT).show();
-	}
+	 }
 	
 	@Override
 	public void onDestroy() {
